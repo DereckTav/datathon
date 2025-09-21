@@ -4,3 +4,6 @@ data/*
 
 # But keep all subdirectories
 !data/*/
+
+data/raw/*.csv
+data/processed/*.csv
