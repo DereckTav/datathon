@@ -1,352 +1,1070 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Frameworks and Tools</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
-  <style>
-    /* Smooth transitions for text and list items */
-    .reveal section h1, 
-    .reveal section h2, 
-    .reveal section p, 
-    .reveal section ul, 
-    .reveal section li {
-      transition: all 0.6s ease-in-out;
-    }
-  
-    /* Slide padding and scroll */
-    .reveal section {
-      padding: 20px;           /* add spacing around content */
-      overflow-y: auto;        /* allow vertical scroll if content exceeds slide height */
-      box-sizing: border-box;  /* include padding in height calculation */
-    }
-  
-    /* Ensure lists have some spacing */
-    ul {
-      margin-top: 20px;
-      padding-left: 20px;
-    }
-  
-    /* Make images scale to fit the slide width */
-    .reveal img {
-      max-width: 100%;         /* never exceed slide width */
-      height: auto;            /* maintain aspect ratio */
-      display: block;
-      margin: 0 auto 20px;     /* center image and add bottom margin */
-    }
-  </style>
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Performance Analysis: 2024-2025 Comparison</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1e3a5f;
+            background-image: 
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+            position: relative;
+        }
+
+        /* Subway tile pattern overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, rgba(255,255,255,0.02) 2px, transparent 2px),
+                linear-gradient(rgba(255,255,255,0.02) 2px, transparent 2px);
+            background-size: 120px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .analysis-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* MTA Station Sign Header */
+        .mta-header {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px;
+            margin-bottom: 60px;
+            border: 4px solid #ffffff;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .mta-header::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 2px solid #ffffff;
+        }
+
+        .question-title {
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 900;
+            text-align: center;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .section {
+            margin-bottom: 120px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 24px;
+            margin-bottom: 48px;
+            border-bottom: 2px solid #ffffff;
+            padding-bottom: 16px;
+        }
+
+        .section-number {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #b0c4de;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+            color: #b0c4de;
+            text-align: center;
+        }
+
+        .limitation-badge {
+            background: #ffffff;
+            color: #1e3a5f;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 16px rgba(255,255,255,0.2);
+        }
+
+        /* NEW: Container to center the dataset badges */
+        .datasets-container {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin: 48px 0;
+        }
+
+        .year-column {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a1a;
+            border: 3px solid #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .year-header {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.01em;
+            border-bottom: 3px solid #ffffff;
+        }
+
+        .year-content {
+            padding: 40px;
+        }
+
+        .metric-display {
+            text-align: center;
+            margin: 32px 0;
+        }
+
+        .metric-value {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #1e3a5f;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .image-placeholder {
+            border: 3px solid #1e3a5f;
+            background: rgba(255,255,255,0.8);
+            padding: 60px 40px;
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+            color: #1e3a5f;
+        }
+
+        .image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px dashed #1e3a5f;
+            opacity: 0.3;
+        }
+
+        .image-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .image-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .stat-card {
+            border: 3px solid #1e3a5f;
+            background: rgba(255,255,255,0.9);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(30,58,95,0.1);
+        }
+
+        .stat-card-green {
+            border: 3px solid #1e3a5f;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(30,58,95,0.1);
+        }
+
+        .stat-card-red {
+            border: 3px solid #1e3a5f;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(30,58,95,0.1);
+        }
+
+        .highlight-number {
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e3a5f;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .highlight-box {
+            background: #1a1a1a;
+            color: white;
+            padding: 32px;
+            margin: 48px 0;
+            position: relative;
+            border: 3px solid #ffffff;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .highlight-box h4 {
+            color: white;
+            font-size: 1.3rem;
+            margin-top: 0;
+            font-weight: 700;
+        }
+
+        .key-insight {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a1a;
+            border: 4px solid #ffffff;
+            padding: 32px;
+            margin: 48px 0;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(255,255,255,0.2);
+        }
+
+        .key-insight::before {
+            content: "KEY INSIGHT";
+            position: absolute;
+            top: -16px;
+            left: 24px;
+            background: #1e3a5f;
+            color: white;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            border: 2px solid #ffffff;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 32px 0;
+            background: rgba(255,255,255,0.95);
+            border: 3px solid #ffffff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #1e3a5f;
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(30,58,95,0.1);
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .improvement {
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        .decline {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .routes-display {
+            background: rgba(255,255,255,0.9);
+            border: 3px solid #1e3a5f;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 24px 0;
+            color: #1e3a5f;
+            box-shadow: 0 4px 16px rgba(30,58,95,0.1);
+        }
+
+        .recommendation-section {
+            background: #1a1a1a;
+            color: white;
+            padding: 60px;
+            margin: 80px 0;
+            position: relative;
+            border: 4px solid #ffffff;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .recommendation-section h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 32px;
+            color: white;
+        }
+
+        .recommendation-section p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .correlation-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: #1e3a5f;
+            margin: 24px 0;
+            border: 3px solid #1e3a5f;
+        }
+
+        .correlation-cell {
+            background: rgba(255,255,255,0.95);
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .correlation-header {
+            background: #1e3a5f !important;
+            color: white !important;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .event-case-study {
+            background: rgba(255,255,255,0.95);
+            color: #1a1a1a;
+            border: 3px solid #ffffff;
+            padding: 40px;
+            margin: 32px 0;
+            box-shadow: 0 8px 32px rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .analysis-container {
+                padding: 40px 20px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .question-title {
+                font-size: clamp(1.2rem, 6vw, 2rem);
+            }
+
+            .section-title {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .year-content {
+                padding: 24px;
+            }
+
+            .metric-value {
+                font-size: 3rem;
+            }
+
+            .recommendation-section {
+                padding: 40px 24px;
+            }
+
+            /* Mobile adjustment for dataset badges */
+            .datasets-container .limitation-badge {
+                display: block;
+                margin: 10px auto;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
+    <div class="analysis-container">
+        
+        <!-- SECTION 1: Street Events and Exempt Violations -->
+        <div class="section">
+            <div class="mta-header">
+                <div class="question-title">Do permitted street events in Manhattan's CBD lead to more exempt violations, and are certain vehicles disproportionately responsible?</div>
+            </div>
+            
+            <p class="section-description">Violations (like double-parking) block bus lanes and reduce transit reliability — a big concern for the MTA and city planners.</p>
 
-      <!-- Slide 1: Title Slide -->
-      <section data-transition="fade">
-        <h1 class="fragment fade-in">Frameworks and Tools</h1>
-        <p class="fragment fade-in" style="font-size: 1.2em; margin-top: 20px;">
-          Exploring essential frameworks and tools for modern projects
-        </p>
-      </section>
+            <!-- NEW SECTION 01: General Overview -->
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h3 class="section-title">General Overview of ACE Violations Dataset</h3>
+            </div>
 
-      <!-- Slide 2: Define a Framework -->
-      <section data-transition="slide">
-        <h2 class="fragment fade-in">What is a Framework?</h2>
-        <p class="fragment fade-in">
-          A <strong>framework</strong> is a structured approach or set of guidelines that helps organize and streamline the process of solving problems or building projects.
-        </p>
-        <ul class="fragment fade-in">
-          <li>Provides reusable components and best practices</li>
-          <li>Reduces repetitive work</li>
-          <li>Ensures consistency across projects</li>
-          <li></li>
-        </ul>
-      </section>
+            <!-- MOVED SECTION: Dataset badges and content placed below the header -->
+            <div class="limitation-badge">
+                Dataset Used: MTA Bus Automated Camera Enforcement Violations: January 1st - December 31st 2024
+            </div>
+            <div class="limitation-badge">
+                Dataset Used: NYC Permitted Event Information: January 1st - December 31st 2024
+            </div>
 
-      <!-- Slide 3: Code Structure -->
-      <section data-transition="fade">
-        <h2 class="fragment fade-in">Code Structure</h2>
-        <p class="fragment fade-in">
-          Overview of how the project is organized. The code will be shown live on screen.
-        </p>
-      </section>
+            <p class="section-description" style="text-align: left;">What are the patterns of exempt violations across different times of day or week?</p>
 
-<!-- Slide 4: 5-Step Data Story Framework -->
-<section data-transition="slide">
-    <h2 class="fragment fade-in">5-Step Data Story Framework</h2>
-    <p class="fragment fade-in">
-      A simple framework to structure data-driven stories:
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>Context:</strong> Set the stage and explain the background.</li>
-      <li><strong>Data:</strong> Present the data that supports your story.</li>
-      <li><strong>Insight:</strong> Highlight key findings or patterns.</li>
-      <li><strong>Narrative:</strong> Craft a compelling story around the insights.</li>
-      <li><strong>Action:</strong> Suggest concrete next steps or recommendations.</li>
-    </ul>
-  </section>
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">Time of Day Patterns</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT TIME OF DAY VIOLATIONS IMAGE]</div>
+                            <div class="image-desc">Bimodal pattern showing peaks at 7 AM and 2 PM</div>
+                        </div>
+                        
+                        <p style="font-weight: 600; margin: 24px 0;">Exempt violations follow a <strong>bimodal pattern</strong>, peaking around <span>7 AM</span> and <span>2 PM</span>.</p>
+                        <p style="margin: 16px 0;">The early morning spike likely reflects buses navigating congested streets during commuter rush hours, while the afternoon peak may align with school dismissals, shift changes, and increased delivery activity.</p>
+                        <p style="margin: 16px 0; font-weight: 600;">These time-specific surges highlight potential pressure points for traffic enforcement and service reliability within the CBD.</p>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">Day of Week Patterns</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT DAY OF WEEK VIOLATIONS IMAGE]</div>
+                            <div class="image-desc">Weekday vs weekend violation comparison</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card-red">
+                                <div class="stat-number">~13,000</div>
+                                <div class="stat-label">Weekday Violations</div>
+                            </div>
+                            <div class="stat-card-green">
+                                <div class="stat-number">~5,000</div>
+                                <div class="stat-label">Weekend Violations</div>
+                            </div>
+                        </div>
 
-  <!-- Slide 5: Step 1 - Context -->
-<section data-transition="fade">
-    <h2 class="fragment fade-in">Step 1: Context</h2>
-    <p class="fragment fade-in">
-      Set the stage for your data story. Explain what is happening and why it matters.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Bus speeds in NYC affect commute times, reliability, and rider satisfaction.</li>
-      <li>City planners and transit agencies monitor speeds to improve service quality.</li>
-      <li>Context: Understanding which routes slowed down can inform operational decisions.</li>
-    </ul>
-  </section>
-  
-  <!-- Slide 6: Step 2 - Data -->
-  <section data-transition="fade">
-    <h2 class="fragment fade-in">Step 2: Data</h2>
-    <p class="fragment fade-in">
-      Present the relevant data that supports the story.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Daily average speed per bus route from 2023–2025.</li>
-      <li>Data broken down by hour, day of week, and borough.</li>
-      <li>Sources: MTA open data, traffic sensors, historical travel times.</li>
-    </ul>
-  </section>
-  
-  <!-- Slide 7: Step 3 - Insight -->
-  <section data-transition="fade">
-    <h2 class="fragment fade-in">Step 3: Insight</h2>
-    <p class="fragment fade-in">
-      Highlight the key findings or patterns in the data.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Certain routes in Manhattan and Brooklyn have slowed down significantly in 2025.</li>
-      <li>Peak hours experienced larger slowdowns than off-peak hours.</li>
-      <li>Some routes in outer boroughs maintained consistent speeds.</li>
-    </ul>
-  </section>
-  
-  <!-- Slide 8: Step 4 - Narrative -->
-  <section data-transition="fade">
-    <h2 class="fragment fade-in">Step 4: Narrative</h2>
-    <p class="fragment fade-in">
-      Craft a compelling story around the insights.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Slowdowns on key routes highlight potential traffic bottlenecks or operational challenges.</li>
-      <li>Commuters in certain areas are disproportionately affected during peak times.</li>
-      <li>Sharing this story can guide targeted improvements and policy decisions.</li>
-    </ul>
-  </section>
-  
-  <!-- Slide 9: Step 5 - Action -->
-  <section data-transition="fade">
-    <h2 class="fragment fade-in">Step 5: Action</h2>
-    <p class="fragment fade-in">
-      Suggest concrete next steps or recommendations based on your story.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Investigate causes of slowdowns on impacted routes (traffic, construction, congestion).</li>
-      <li>Adjust bus schedules or add express services to maintain reliability.</li>
-      <li>Monitor speed trends over time to measure effectiveness of interventions.</li>
-    </ul>
-  </section>
+                        <p style="margin: 16px 0;">Most exempt violations occur on <strong>weekdays</strong>, totaling around 13,000 compared to about 5,000 on weekends.</p>
+                        <p style="margin: 16px 0; font-weight: 600;">This weekday concentration reflects heavier bus and commercial activity in the CBD during standard work hours, suggesting that traffic management challenges are closely tied to weekday commuting and delivery patterns rather than weekend events.</p>
+                    </div>
+                </div>
+            </div>
 
-  <!-- Slide 6b: Data Workflow -->
-<section data-transition="fade">
-    <h2 class="fragment fade-in">Data Workflow: Iterative Process</h2>
-    <p class="fragment fade-in">
-      A robust data workflow is key to uncovering insights and building truth into our data story. It is an iterative process:
-    </p>
-    <ul class="fragment fade-in">
-      <li>Ask interesting questions</li>
-      <li>Get the data</li>
-      <li>Explore the data</li>
-      <li>Model the data</li>
-      <li>Visualize the data</li>
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Each step informs the next, and repeated iteration ensures accuracy, context, and meaningful insights.
-    </p>
-    <!-- Insert PNG illustrating workflow -->
-    <img src="assets/images/data_story_workflow.png" 
-         alt="Data Workflow Illustration" 
-         width="800" 
-         class="fragment fade-in">
-  </section>
-  
+            <!-- NEW SECTION 02: Statistical Tests -->
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h3 class="section-title">Statistical Analysis of ACE Dataset</h3>
+            </div>
 
-  <!-- Slide 10: Storytelling Lenses & Ethical Framing -->
-<section data-transition="convex">
-    <h2 class="fragment fade-in">Storytelling Lenses & Ethical Framing</h2>
-    <p class="fragment fade-in">
-      When telling data-driven stories, the perspective or "lens" you choose can shape interpretation. Make sure your story is supported by the data and highlights meaningful impacts.
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>Working-Class Lens:</strong> Focus on how bus speed changes affect daily commuters, access to jobs, and quality of life.</li>
-      <li><strong>Operational Lens:</strong> Examine the MTA’s internal challenges, resource allocation, and scheduling strategies.</li>
-      <li><strong>Policy Lens:</strong> Highlight implications for city planning, traffic management, and transit equity.</li>
-      <li><strong>Ethical Storytelling:</strong> Always let the data drive your story. Avoid exaggeration; be transparent about limitations and uncertainty.</li>
-    </ul>
-    <p class="fragment fade-in">
-      Applying multiple lenses can make your story richer and more relevant to different audiences.
-    </p>
-  </section>
+            <p class="section-description" style="text-align: left;">Some vehicles stopped in violation are exempt from fines due to business reasons. Do exempt vehicles and non-exempt vehicles have different patterns in their violation counts?</p>
 
-  <!-- Slide 11: Storytelling Frameworks -->
-<section data-transition="slide">
-    <h2 class="fragment fade-in">Frameworks for Telling Stories</h2>
-    <p class="fragment fade-in">
-      There are multiple storytelling frameworks that help structure narratives. While their approaches differ, the underlying principles remain consistent.
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>AND, BUT, THEREFORE:</strong> A simple framework for causal storytelling—show the situation, the challenge, and the resolution.</li>
-      <li><strong>Pyramid Principle:</strong> Start with the key conclusion, then support it with logically structured arguments and evidence.</li>
-      <li><strong>Subsets & Variations:</strong> Many frameworks exist (e.g., 5-step data story, STAR method), but they all emphasize clear context, insight, and action.</li>
-    </ul>
-    <p class="fragment fade-in">
-      <strong>Keys that remain the same across frameworks:</strong>
-    </p>
-    <ul class="fragment fade-in">
-      <li>Context / Situation: Set the stage</li>
-      <li>Insight / Complication: Highlight key findings or challenges</li>
-      <li>Narrative / Resolution: Craft a coherent story</li>
-      <li>Action / Recommendation: Suggest next steps</li>
-    </ul>
-  </section>
+            <div class="highlight-box">
+                <h4>Mann-Whitney U Test</h4>
+                <p><strong>Null Hypothesis (H₀):</strong> The distributions of exempt and non-exempt violation counts are the same.</p>
+                <p><strong>Alternative Hypothesis (H₁):</strong> The distributions of exempt and non-exempt violation counts are different.</p>
+                
+                <div style="margin: 24px 0;">
+                    <p><strong>Results:</strong></p>
+                    <ul style="margin: 16px 0; padding-left: 20px;">
+                        <li>Test Statistic: 697,899,458.0</li>
+                        <li>p-value: < 0.001</li>
+                    </ul>
+                </div>
 
-  <!-- Slide 14: Story Beats - BUT and THEREFORE (ACE Example) -->
-<section data-transition="convex">
-    <h2 class="fragment fade-in">Creating Tension in Stories</h2>
-    <p class="fragment fade-in">
-      Good stories don’t just list events (“AND, AND, AND”). They create tension and keep the audience engaged.
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>BUT:</strong> Introduce a complication or challenge that interrupts expectations.</li>
-      <li><strong>THEREFORE:</strong> Show the consequence or action that follows from that challenge.</li>
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Example (ACE Program & Bus Speeds):
-    </p>
-    <ul class="fragment fade-in">
-      <li>The ACE program improved certain routes’ bus speeds, <strong>BUT</strong> some routes still experienced delays during peak hours.</li>
-      <li><strong>THEREFORE</strong>, the MTA adjusted schedules, monitored wait times, and optimized stop performance to maintain overall reliability.</li>
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Using this structure helps your story feel dynamic, logical, and engaging—highlighting challenges and the resulting actions.
-    </p>
-  </section>
-  
+                <p><strong>Conclusion:</strong> Reject H₀ → Exempt vehicles' violation patterns are statistically different from those of non-exempt vehicles.</p>
+            </div>
 
-  <!-- Slide 12: Importance of Domain Knowledge -->
-<section data-transition="fade">
-    <h2 class="fragment fade-in">The Importance of Domain Knowledge</h2>
-    <p class="fragment fade-in">
-      Domain knowledge is understanding the context, nuances, and real-world systems behind your data. It helps you interpret patterns accurately and tell meaningful stories.
-    </p>
-    <ul class="fragment fade-in">
-      <li>Allows you to identify which trends are significant versus noise.</li>
-      <li>Helps contextualize findings for specific audiences, such as transit planners or commuters.</li>
-      <li>Ensures your story is realistic and actionable, grounded in the system you're analyzing.</li>
-      <li>Example: Knowing how NYC buses are scheduled, traffic patterns, and borough characteristics can explain why certain routes slow down more than others.</li>
-    </ul>
-    <p class="fragment fade-in">
-      Without domain knowledge, even accurate data can be misinterpreted or fail to resonate with your audience.
-    </p>
-  </section>
+            <div class="image-placeholder">
+                <div class="image-title">[INSERT EXEMPT VS NON-EXEMPT VIOLATIONS COMPARISON IMAGE]</div>
+                <div class="image-desc">Statistical comparison of violation patterns</div>
+            </div>
 
-  <!-- Slide 13: Key Metrics & ACE Program -->
-<section data-transition="slide">
-    <h2 class="fragment fade-in">Key Metrics: The ACE Program</h2>
-    <p class="fragment fade-in">
-      Let's start with a question for the audience:
-    </p>
-    <ul class="fragment fade-in">
-      <li>What is the <strong>ACE program</strong>?</li>
-      <li>Do ACE violations only occur where there is a bus lane?</li>
-      <li>What is the purpose of the <strong>ACE program</strong>?</li>
+            <!-- NEW SECTION 03: Repeat Offenders and Location Analysis 
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h3 class="section-title">General Overview of ACE Violations Dataset (Statistical Tests)</h3>
+            </div>
+            -->
 
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      In analyzing the program, we focus on these key metrics:
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>Average Speed of Bus:</strong> The mean speed of a bus along a route, measured in miles per hour.</li>
-      <li><strong>Wait Assessment:</strong> Time passengers wait at stops before boarding.</li>
-      <li><strong>Bus Stop Time:</strong> Duration a bus spends at each stop picking up and dropping off passengers.</li>
-      <li><strong>Additional Travel Time:</strong> Extra time incurred due to delays, traffic, or operational inefficiencies.</li>
-      <li><strong>Customer Journey Time Performance:</strong> Total time passengers experience from start to end of their trip, including walking, waiting, and riding.</li>
-    </ul>
-    <p class="fragment fade-in">
-      Understanding and defining these metrics helps us objectively evaluate the ACE program's effectiveness.
-    </p>
-  </section>
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">For vehicles that are exempt for business reasons, are there repeat offenders?</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT REPEAT OFFENDERS COMPARISON IMAGE]</div>
+                            <div class="image-desc">Exempt vs non-exempt repeat offender analysis</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card-red">
+                                <div class="stat-number">~40%</div>
+                                <div class="stat-label">Exempt Repeat Offenders</div>
+                            </div>
+                            <div class="stat-card-green">
+                                <div class="stat-number">~21%</div>
+                                <div class="stat-label">Non-Exempt Repeat Offenders</div>
+                            </div>
+                        </div>
 
-  <!-- Slide 14: Feature Engineering & Custom Metrics -->
-<section data-transition="fade">
-    <h2 class="fragment fade-in">Feature Engineering & Custom Metrics</h2>
-    <p class="fragment fade-in">
-      Sometimes the standard metrics aren’t enough. We can create new metrics to better capture performance and insights.
-    </p>
-    <ul class="fragment fade-in">
-      <li><strong>Violation Density:</strong> Use polygons to calculate the density of ACE violations along a route.</li>
-      <li><strong>% of Violations Not Exempt:</strong> Measure the proportion of violations that are enforceable.</li>
-      <li><strong>Bus/Car Speed Ratio:</strong> A custom metric to compare bus speeds to car speeds.
-        <br><em>Equation:</em> <strong>Bus/Car Speed Ratio = Average Bus Speed ÷ Average Car Speed</strong>
-      </li>
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Initially, I couldn’t find car speed data at the necessary granularity. Then I realized Google Maps provides historical car speed data, which allows me to approximate this ratio.
-    </p>
-    <!-- Insert PNG illustration here -->
-    <img src="assets/images/google_carspeed.png" 
-         alt="Feature Engineering Example" 
-         width="800" 
-         class="fragment fade-in">
-  </section>
-  
-  <!-- Slide 15: Working with Visualizations -->
-<section data-transition="slide">
-    <h2 class="fragment fade-in">Framework for Visualizations</h2>
-    <p class="fragment fade-in">
-      Visualizations should clearly communicate your insights. A simple framework helps:
-    </p>
-    <ul class="fragment fade-in">
-      <li>Highlight the most important data points or trends.</li>
-      <li>Use color intentionally to guide attention.</li>
-      <li>Keep charts simple and uncluttered.</li>
-      <li>Label axes, units, and key categories clearly.</li>
-    </ul>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Example: Two versions of the same visualization
-    </p>
-    <div class="fragment fade-in" style="display: flex; gap: 20px; margin-top: 20px;">
-      <!-- Colored version -->
-      <img src="assets/images/violations_use.png" 
-           alt="Visualization with Color Highlighting" 
-           width="400">
-      <!-- Without color -->
-      <img src="assets/images/violations_all_orange.png" 
-           alt="Visualization without Color Highlighting" 
-           width="400">
+                        <div class="highlight-box">
+                            <h4>Mann–Whitney U Test with Cliff's Delta Effect Size</h4>
+                            <p>Exempt vehicles have a statistically higher rate of repeat violations than non-exempt vehicles (p < 0.001).</p>
+                            <p>The effect size is small-to-moderate (Cliff's Delta = 0.22), indicating that exempt vehicles are somewhat more likely to repeatedly offend, though the difference is not dramatic.</p>
+                            <p><strong>Conclusion:</strong> This indicates that enforcement should focus on repeat offenders among exempt vehicles, while the moderate difference suggests that wide-scale policy changes may not be required.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">Where are exempt vehicles frequently in violation?</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT VIOLATION LOCATIONS BY TYPE IMAGE]</div>
+                            <div class="image-desc">Geographic distribution of violation types</div>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <h4>Chi-Square Test of Violation Types by Stop</h4>
+                            <p><strong>Null Hypothesis (H₀):</strong> Violation types are randomly distributed across stops.</p>
+                            <p><strong>Alternative Hypothesis (H₁):</strong> Some stop/violation-type combinations occur more frequently than expected by chance.</p>
+                            
+                            <div style="margin: 24px 0;">
+                                <p><strong>Results:</strong></p>
+                                <ul style="margin: 16px 0; padding-left: 20px;">
+                                    <li>Chi-square statistic: 59,906.15</li>
+                                    <li>p-value: < 0.001</li>
+                                </ul>
+                            </div>
+
+                            <p><strong>Conclusion:</strong> We reject H₀. Exempt violations are concentrated at specific stops and for certain violation types. This suggests that enforcement resources and fleet management strategies could be optimized by focusing on high-risk stops and common violation types, improving efficiency and reducing repeat offenses.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORIGINAL SECTION NOW BECOMES 03 -->
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h3 class="section-title">Assessing the Impact of Street Events on Exempt Violations</h3>
+            </div>
+
+            <div class="key-insight">
+                <strong>Events in general don't increase violations:</strong>
+                <ul style="margin: 16px 0; padding-left: 20px;">
+                    <li style="margin: 8px 0;">On average, there are slightly fewer exempt violations during events compared to nearby non-event days (Δ = <span class="decline">-0.10</span>)</li>
+                    <li style="margin: 8px 0;">Most permitted events (block parties, film shoots, athletic races, etc.) don't disrupt traffic enough to trigger widespread exempt violations.</li>
+                </ul>
+            </div>
+
+            <div class="image-placeholder">
+                <div class="image-title">[INSERT GENERAL VIOLATIONS COMPARISON IMAGE]</div>
+                <div class="image-desc">Comparison of violations during events vs non-event days</div>
+            </div>
+
+            <p class="section-description" style="text-align: left;">What matters is the event type…</p>
+
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">Exempt Violations during Events<br>(Full Street Closure + Curb Lane Closure)<br>→ 689 events (1-day, 2024)</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT PARTIAL CLOSURE IMAGE]</div>
+                            <div class="image-desc">Partial closure event analysis</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card-green">
+                                <div class="stat-number">1.60</div>
+                                <div class="stat-label">Mean Exempt Violations per Event</div>
+                            </div>
+                            <div class="stat-card-green">
+                                <div class="stat-number">0.20</div>
+                                <div class="stat-label">Mean Exempt Repeat Offenders</div>
+                            </div>
+                        </div>
+
+                        <p style="font-weight: 600; margin: 24px 0;">Full closures produce <span class="decline">4×</span> more violations per event and account for <span class="decline">~44%</span> of all violations, despite being just <span class="decline">~10%</span> of events.</p>
+                        <p style="font-weight: 600; margin: 24px 0;">The type of event matters — full closures are the primary driver of double-parking behavior.</p>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">Exempt Violations during Events<br>(Full Street Closure)<br>→ 70 events (1-day, 2024)</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT FULL CLOSURE IMAGE]</div>
+                            <div class="image-desc">Full closure event analysis</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card-red">
+                                <div class="stat-number">6.96</div>
+                                <div class="stat-label">Mean Exempt Violations per Event</div>
+                            </div>
+                            <div class="stat-card-red">
+                                <div class="stat-number">1.0</div>
+                                <div class="stat-label">Mean Exempt Repeat Offenders</div>
+                            </div>
+                        </div>
+
+                        <p style="font-weight: 600; margin: 24px 0;">Repeat violators are <span class="decline">5×</span> more common during full closures.</p>
+                        <p style="font-weight: 600; margin: 24px 0;">This suggests that a small group of vehicles disproportionately drive the problem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1 Recommendations -->
+        <div class="recommendation-section">
+            <h3 style="text-align: center;">Recommendations</h3>
+            <div style="text-align: center;">
+                <p style="margin-bottom: 32px;">Implement coordination between DOT & NYPD to adjust bus routes or add temporary loading zones near full closures, reducing double-parking hotspots and improving bus performance in the CBD.</p>
+            </div>
+        </div>
+
+        <!-- SECTION 2: Congestion Pricing Impact -->
+        <div class="section">
+            <div class="mta-header">
+                <div class="question-title">How have violations and bus performance of routes changed alongside the implementation of congestion pricing?</div>
+            </div>
+
+            <!-- Bus Speed Performance Section -->
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">Bus Speed Performance</h2>
+            </div>
+            
+            <div class="limitation-badge">
+                Dataset Period: January 5 - August 20 | Focus: Central Business District Routes
+            </div>
+
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">2024</div>
+                    <div class="year-content">
+                        <div class="metric-display">
+                            <div class="metric-value">7.64</div>
+                            <div class="metric-label">Average Speed (mph)</div>
+                        </div>
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2024 SPEED IMAGE]</div>
+                            <div class="image-desc">2024 speed performance visualization</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">2025</div>
+                    <div class="year-content">
+                        <div class="metric-display">
+                            <div class="metric-value">7.76</div>
+                            <div class="metric-label">Average Speed (mph)</div>
+                        </div>
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2025 SPEED IMAGE]</div>
+                            <div class="image-desc">2025 speed performance visualization</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <strong>Key Finding:</strong> <span class="improvement">+0.12 mph improvement</span> in average speed from 2024 to 2025, attributed to reduced congestion in key CBD areas.
+            </div>
+
+            <!-- ACE Violations Analysis -->
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">ACE Violations</h2>
+            </div>
+
+            <div class="limitation-badge">
+                ACE Routes Analysis: June 20 - August 20 | 3 Routes Examined
+            </div>
+
+            <div class="routes-display">
+                Routes Analyzed: M34+, M15+, M23+
+            </div>
+
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">2024</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2024 VIOLATIONS IMAGE]</div>
+                            <div class="image-desc">2024 violations breakdown</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">9,983</div>
+                                <div class="stat-label">Total Violations Mean</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">6,014</div>
+                                <div class="stat-label">Unique Vehicles Mean</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">17,160</div>
+                                <div class="stat-label">First-Time Offenders</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">14,433</div>
+                                <div class="stat-label">Repeat Offenders</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">2025</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2025 VIOLATIONS IMAGE]</div>
+                            <div class="image-desc">2025 violations breakdown</div>
+                        </div>
+                        
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">9,871</div>
+                                <div class="stat-label">Total Violations Mean</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">5,985</div>
+                                <div class="stat-label">Unique Vehicles Mean</div>
+                            </div>
+                        </div>
+
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">16,028</div>
+                                <div class="stat-label">First-Time Offenders</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">12,852</div>
+                                <div class="stat-label">Repeat Offenders</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <strong>Improvement Observed:</strong> <span class="improvement">Reduction in both total violations and repeat offenders</span> indicating better traffic compliance in 2025.
+            </div>
+
+            <!-- Wait Assessment Analysis -->
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2 class="section-title">Bus Wait Performance</h2>
+            </div>
+
+            <div class="limitation-badge">
+                Wait Assessment: % of buses arriving on schedule | Period: January 5 - August 20
+            </div>
+
+            <div class="comparison-grid">
+                <div class="year-column">
+                    <div class="year-header">2024</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2024 WAIT ASSESSMENT IMAGE]</div>
+                            <div class="image-desc">2024 wait time performance</div>
+                        </div>
+
+                        <h4 style="margin: 32px 0 16px 0; font-weight: 700;">Correlation Matrix</h4>
+                        <div class="correlation-grid">
+                            <div class="correlation-cell correlation-header"></div>
+                            <div class="correlation-cell correlation-header">Total Violations</div>
+                            <div class="correlation-cell correlation-header">Unique Violations</div>
+                            <div class="correlation-cell correlation-header">Wait Assessment</div>
+                            <div class="correlation-cell correlation-header">Total Violations</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell"><span class="decline">-0.798</span></div>
+                            <div class="correlation-cell correlation-header">Unique Violations</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell"><span class="decline">-0.796</span></div>
+                            <div class="correlation-cell correlation-header">Wait Assessment</div>
+                            <div class="correlation-cell"><span class="decline">-0.798</span></div>
+                            <div class="correlation-cell"><span class="decline">-0.796</span></div>
+                            <div class="correlation-cell">1.000</div>
+                        </div>
+
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">75.9%</div>
+                                <div class="stat-label">Routes w/ Violations</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">68.0%</div>
+                                <div class="stat-label">Routes w/o Violations</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">13</div>
+                                <div class="stat-label">Poor Performing Routes</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">26</div>
+                                <div class="stat-label">Worse During Peak</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="year-column">
+                    <div class="year-header">2025</div>
+                    <div class="year-content">
+                        <div class="image-placeholder">
+                            <div class="image-title">[INSERT 2025 WAIT ASSESSMENT IMAGE]</div>
+                            <div class="image-desc">2025 wait time performance</div>
+                        </div>
+
+                        <h4 style="margin: 32px 0 16px 0; font-weight: 700;">Correlation Matrix</h4>
+                        <div class="correlation-grid">
+                            <div class="correlation-cell correlation-header"></div>
+                            <div class="correlation-cell correlation-header">Total Violations</div>
+                            <div class="correlation-cell correlation-header">Unique Violations</div>
+                            <div class="correlation-cell correlation-header">Wait Assessment</div>
+                            <div class="correlation-cell correlation-header">Total Violations</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell"><span class="decline">-0.560</span></div>
+                            <div class="correlation-cell correlation-header">Unique Violations</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell">1.000</div>
+                            <div class="correlation-cell"><span class="decline">-0.562</span></div>
+                            <div class="correlation-cell correlation-header">Wait Assessment</div>
+                            <div class="correlation-cell"><span class="decline">-0.560</span></div>
+                            <div class="correlation-cell"><span class="decline">-0.562</span></div>
+                            <div class="correlation-cell">1.000</div>
+                        </div>
+
+                        <div class="stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">80.6%</div>
+                                <div class="stat-label">Routes w/ Violations</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">72.2%</div>
+                                <div class="stat-label">Routes w/o Violations</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">9</div>
+                                <div class="stat-label">Poor Performing Routes</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">26</div>
+                                <div class="stat-label">Worse During Peak</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <strong>Significant 2025 Improvements:</strong> <span class="improvement">Weaker violation-performance correlation</span>, <span class="improvement">better wait assessments</span>, and <span class="improvement">fewer poor-performing routes</span> (9 vs 13).
+            </div>
+
+            <!-- Events Impact Analysis -->
+            <div class="section-header">
+                <span class="section-number">05</span>
+                <h2 class="section-title">Event Impacts</h2>
+            </div>
+
+            <p style="font-size: 1.1rem; margin-bottom: 48px;">Analysis of consistent events across both years, measuring impact against baseline conditions from the month prior to each event. The previous month is a month that had no events that had street closure in it.</p>
+
+            <div class="event-case-study">
+                <h4 style="font-size: 1.4rem; margin-top: 0; font-weight: 700;">Case Study: Chanel Artists Awards Dinner</h4>
+                <p><strong>Location:</strong> Thomas Street between West Broadway and Church Street</p>
+                <p><strong>Affected Routes:</strong> M55, M20</p>
+                
+                <div class="comparison-grid">
+                    <div class="year-column">
+                        <div class="year-header">2024 Impact</div>
+                        <div class="year-content">
+                            <div class="image-placeholder">
+                                <div class="image-title">[INSERT 2024 EVENT IMPACT IMAGE]</div>
+                                <div class="image-desc">2024 event impact analysis</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label decline">Higher impact on bus speeds</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="year-column">
+                        <div class="year-header">2025 Impact</div>
+                        <div class="year-content">
+                            <div class="image-placeholder">
+                                <div class="image-title">[INSERT 2025 EVENT IMPACT IMAGE]</div>
+                                <div class="image-desc">2025 event impact analysis</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label improvement">Lower impact on bus speeds</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>High-Impact Event Example (2024)</h4>
+                <p><strong>Location:</strong> West 56th Street between 9th Avenue and 10th Avenue</p>
+                <p><strong>Affected Routes:</strong> M31, M11, M12, M57</p>
+                
+                <table class="data-table">
+                    <tr>
+                        <th>Route</th>
+                        <th>Baseline (mph)</th>
+                        <th>Event (mph)</th>
+                        <th>Change (%)</th>
+                        <th>Impact</th>
+                    </tr>
+                    <tr>
+                        <td>M12</td>
+                        <td>6.16</td>
+                        <td>6.67</td>
+                        <td><span class="decline">-7.64%</span></td>
+                        <td>HIGH</td>
+                    </tr>
+                    <tr>
+                        <td>M11</td>
+                        <td>6.23</td>
+                        <td>6.50</td>
+                        <td><span class="decline">-4.15%</span></td>
+                        <td>MEDIUM</td>
+                    </tr>
+                    <tr>
+                        <td>M57</td>
+                        <td>4.86</td>
+                        <td>4.94</td>
+                        <td><span class="decline">-1.55%</span></td>
+                        <td>LOW</td>
+                    </tr>
+                    <tr>
+                        <td>M31</td>
+                        <td>5.18</td>
+                        <td>5.22</td>
+                        <td><span class="decline">-0.88%</span></td>
+                        <td>LOW</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h4>Positive Impact Event Example (2024)</h4>
+                <p><strong>Location:</strong> West 30th Street between 7th Avenue and Avenue of the Americas</p>
+                <p><strong>Affected Routes:</strong> M20, M7</p>
+                
+                <table class="data-table">
+                    <tr>
+                        <th>Route</th>
+                        <th>Baseline (mph)</th>
+                        <th>Event (mph)</th>
+                        <th>Change (%)</th>
+                        <th>Impact</th>
+                    </tr>
+                    <tr>
+                        <td>M20</td>
+                        <td>6.02</td>
+                        <td>6.10</td>
+                        <td><span class="improvement">+1.27%</span></td>
+                        <td>LOW</td>
+                    </tr>
+                    <tr>
+                        <td>M7</td>
+                        <td>7.02</td>
+                        <td>7.01</td>
+                        <td><span class="decline">-0.21%</span></td>
+                        <td>LOW</td>
+                    </tr>
+                </table>
+                <p><em>Not all street events negatively impact bus performance. Strategic event placement can improve traffic flow.</em></p>
+            </div>
+        </div>
+
+        <!-- Section 2 Recommendations -->
+        <div class="recommendation-section">
+            <h3 style="text-align: center;">Recommendations</h3>
+            <div style="text-align: center;">
+                <p style="margin-bottom: 32px;">Develop a system to monitor the impacts of events using bus performance and street closure permits, to better decide where to allow street events that close one or more streets, promoting improved bus performance in Manhattan's Central Business District.</p>
+            </div>
+        </div>
+
     </div>
-    <p class="fragment fade-in" style="margin-top: 20px;">
-      Notice how color guides your attention to the most important trends.
-    </p>
-  </section>
-  
-
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
-  <script>
-    Reveal.initialize({
-      transition: 'slide',
-      transitionSpeed: 'fast',
-      backgroundTransition: 'fade',
-      slideNumber: true
-    });
-  </script>
 </body>
 </html>
